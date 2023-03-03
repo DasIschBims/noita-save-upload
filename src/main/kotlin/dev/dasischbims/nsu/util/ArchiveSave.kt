@@ -1,27 +1,24 @@
 package dev.dasischbims.nsu.util
 
 import dev.dasischbims.nsu.util.SaveFolder.isValidSaveFolder
+import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 import java.text.SimpleDateFormat
 
 object ArchiveSave {
-    // TODO: Use this to archive save files
     fun archiveSave(saveFolder: File) {
         if (saveFolder.exists() && isValidSaveFolder(saveFolder)) {
-            val currentTime = SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis())
-            val archiveFolder = File(saveFolder, "NoitaSave${currentTime}")
-            if (!archiveFolder.exists()) archiveFolder.mkdir()
-
-            saveFolder.listFiles()?.forEach { file ->
-                if (file.name.startsWith("save")) {
-                    file.copyTo(File(archiveFolder, file.name), true)
-                }
+            val currentTime = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(System.currentTimeMillis())
+            // zip the save folder
+            val archiveFolder = File(saveFolder.parentFile, "Noita-Save-Archives")
+            if (!archiveFolder.exists()) {
+                archiveFolder.mkdir()
             }
+            ZipUtil.pack(saveFolder, File(archiveFolder, "${saveFolder.name}-$currentTime.zip"))
 
-            println("Archived save files to ${archiveFolder.absolutePath}")
+            return println("Archived save files to ${archiveFolder.absolutePath}")
         } else {
-            println("Invalid save folder: ${saveFolder.absolutePath}")
-            return
+            return println("Invalid save folder: ${saveFolder.absolutePath}")
         }
     }
 }

@@ -1,5 +1,6 @@
 package dev.dasischbims.nsu
 
+import dev.dasischbims.nsu.util.ArchiveSave.archiveSave
 import dev.dasischbims.nsu.util.SaveFolder
 import dev.dasischbims.nsu.util.SaveFolder.isValidSaveFolder
 import dev.dasischbims.nsu.util.UserInput.readUserFolderInput
@@ -12,6 +13,7 @@ class Main {
 
             if (saveFolder.exists() && isValidSaveFolder(saveFolder)) {
                 println("Found save folder at ${saveFolder.absolutePath}")
+                archiveSave(saveFolder)
             } else {
                 println("Could not find save folder at ${saveFolder.absolutePath}")
                 while (true) {
