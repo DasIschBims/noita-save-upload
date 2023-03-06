@@ -4,21 +4,26 @@ import java.io.File
 
 object SaveFolder {
     fun getDefaultSaveFolder(): File {
-        return when (System.getProperty("os.name").lowercase()) {
-            "windows" -> {
-                val appData = System.getenv("LOCALAPPDATA")
-                File("$appData\\LocalLow\\Nolla_Games_Noita")
+        val os = System.getProperty("os.name").lowercase()
+        return when {
+            os.contains("windows") -> {
+                // get appdata folder
+                val userProfile = System.getenv("USERPROFILE")
+                File("$userProfile\\AppData\\LocalLow\\Nolla_Games_Noita")
             }
-            "linux" -> {
-                val steamUser = "steamuser" // replace this with your actual Steam username
+            os.contains("linux") -> {
                 val home = System.getProperty("user.home")
-                File("$home/.local/share/Steam/steamapps/compatdata/881100/pfx/drive_c/users/$steamUser/AppData/LocalLow/Nolla_Games_Noita")
+                File("$home/.local/share/Steam/steamapps/compatdata/881100/pfx/drive_c/users/steamuser/AppData/LocalLow/Nolla_Games_Noita")
             }
             else -> throw UnsupportedOperationException("Unsupported operating system")
         }
     }
 
     fun isValidSaveFolder(folder: File): Boolean {
-        return folder.exists() && folder.isDirectory && folder.listFiles()?.any { it.name == "save00" } ?: false
+        val exists = folder.exists()
+        val isDirectory = folder.isDirectory
+        val fileList = folder.listFiles()
+        val containsSaveFile = fileList?.any { it.name == "save00" } ?: false
+        return exists && isDirectory && containsSaveFile
     }
 }

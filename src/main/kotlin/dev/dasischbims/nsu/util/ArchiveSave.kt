@@ -1,24 +1,29 @@
 package dev.dasischbims.nsu.util
 
+import com.diogonunes.jcolor.Ansi
+import com.diogonunes.jcolor.Attribute
 import dev.dasischbims.nsu.util.SaveFolder.isValidSaveFolder
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 import java.text.SimpleDateFormat
 
 object ArchiveSave {
-    fun archiveSave(saveFolder: File) {
+    fun archiveSave(saveFolder: File): String {
         if (saveFolder.exists() && isValidSaveFolder(saveFolder)) {
             val currentTime = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(System.currentTimeMillis())
+            val archiveName = "${saveFolder.name}-$currentTime.zip"
             // zip the save folder
             val archiveFolder = File(saveFolder.parentFile, "Noita-Save-Archives")
             if (!archiveFolder.exists()) {
                 archiveFolder.mkdir()
             }
-            ZipUtil.pack(saveFolder, File(archiveFolder, "${saveFolder.name}-$currentTime.zip"))
+            ZipUtil.pack(saveFolder, File(archiveFolder, archiveName))
 
-            return println("Archived save files to ${archiveFolder.absolutePath}")
+            println(Ansi.colorize("\nSuccessfully archived save files to ${archiveFolder.absolutePath}\\$archiveName\n", Attribute.GREEN_TEXT()))
+            // return the archive folder path
+            return "${archiveFolder.absolutePath}\\$archiveName"
         } else {
-            return println("Invalid save folder: ${saveFolder.absolutePath}")
+            throw IllegalArgumentException("\nInvalid save folder: ${saveFolder.absolutePath}")
         }
     }
 }
