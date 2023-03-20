@@ -3,6 +3,8 @@
 (heavily wip)
 aims to archive and upload noita save files to google drive because steamcloud doesn't work with long runs
 
+> :warning: I might just cancel the save uploading since it'll take a lot of resources when often uploading the saves
+
 ## Building
 
 ### Requirements
